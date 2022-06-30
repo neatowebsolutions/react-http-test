@@ -1,22 +1,22 @@
-import axios from 'axios';
 import useSWR from 'swr';
+import HttpClient from '../httpClient';
 
-const client = axios.create();
-
-client.defaults.baseURL = 'http://localhost:3002';
-client.defaults.timeout = 20 * 1000;
-client.defaults.responseType = 'json';
-client.defaults.headers.common['Content-Type'] =
-  'application/json; charset=utf-8';
+const httpClient = new HttpClient({
+  baseUrl: 'http://localhost:3002'
+});
 
 // const fetcher = (url) => fetch(url).then((r) => r.json());
-const fetcher = (url) =>
-  client({ method: 'GET', url }).then((response) => response.data);
+// const fetcher = (url) =>
+//   client({ method: 'GET', url }).then((response) => response.data);
 
 const useSkills = () => {
-  const { data, error } = useSWR(`/categories`, fetcher, {
-    revalidateOnFocus: false
-  });
+  const { data, error } = useSWR(
+    `/categories`,
+    httpClient.get.bind(httpClient),
+    {
+      revalidateOnFocus: false
+    }
+  );
 
   return {
     data,
